@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="page-container">
+        <h3>Thank you for your order, {{ username }}!</h3>
+
+        <div class="success-message">
+            <h2>Order Confirmed ✓</h2>
+        </div>
+
+        <h2>Delivery Address</h2>
+        <p class="welcome-text">{{ customer.address }}</p>
+
+        <p class="welcome-text">Your order will be delivered to this location shortly. Thank you for choosing Meal Buddy!</p>
+
+        <div class="button-container">
+            {% if cart_items %}
+                <a href="{% url 'customer_menu' cart_items.0.restaurant.id username %}" class="btn-primary">Back to Restaurants</a>
+            {% else %}
+                <a href="/" class="btn-primary">Back to Home</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

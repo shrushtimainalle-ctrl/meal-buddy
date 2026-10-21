@@ -1,0 +1,11 @@
+<nav class="customer-flow-nav" aria-label="Order flow">
+    <a href="{% url 'customer_restaurants' username %}" class="btn-primary btn-cart-header">Restaurants</a>
+    <a href="{% url 'show_cart' username %}" class="btn-primary btn-cart-header{% if cart_has_items %} nav-cart-active{% endif %}">
+        Your cart{% if cart_count %} ({{ cart_count }}){% endif %}
+    </a>
+    {% if cart_has_items %}
+    <a href="{% url 'checkout' username %}" class="btn-primary btn-cart-header nav-payment-active">Payment</a>
+    {% else %}
+    <span class="btn-primary btn-cart-header nav-disabled" title="Add items to your cart first">Payment</span>
+    {% endif %}
+</nav>

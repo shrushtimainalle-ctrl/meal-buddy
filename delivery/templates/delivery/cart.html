@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your cart</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="theme-chinese">
+    <div class="page-container page-cart">
+        <header class="menu-header">
+            <div>
+                <p class="menu-eyebrow">MealMate</p>
+                <h1 class="menu-title">Your cart</h1>
+                <p class="welcome-text">Signed in as <strong>{{ username }}</strong> — review items, then go to payment.</p>
+            </div>
+            {% include 'delivery/includes/customer_nav.html' %}
+        </header>
+
+        {% if just_added %}
+        <div class="success-message">Item added — review your cart below, then use Payment when ready.</div>
+        {% endif %}
+
+        <div class="table-wrap">
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in itemList %}
+                    <tr>
+                        <td class="td-thumb">
+                            <img src="{{ item.picture }}" alt="{{ item.name }}" class="menu-item-thumb">
+                        </td>
+                        <td class="td-name">{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td class="td-price">₹{{ item.price }}</td>
+                        <td class="td-actions">
+                            <a href="{% url 'remove_from_cart' item.id username %}?next=cart" class="btn-cart btn-cart-remove">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-menu">Your cart is empty. Browse a restaurant menu to add dishes.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-footer">
+            <div class="total-price">
+                Total: ₹{{ total_price }}
+            </div>
+            {% if cart_has_items %}
+            <form action="{% url 'checkout' username %}" method="get" class="checkout-form">
+                <input type="submit" value="Go to Payment" />
+            </form>
+            {% else %}
+            <button type="button" class="checkout-disabled" disabled>Add items before payment</button>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="theme-chinese">
+    <div class="page-container page-menu page-restaurants">
+        <header class="menu-header">
+            <div>
+                <p class="menu-eyebrow">MealMate</p>
+                <h1 class="menu-title">Restaurants</h1>
+                <p class="welcome-text">Welcome, <strong>{{ username }}</strong> — pick a place to browse the menu and add items to your cart.</p>
+            </div>
+            {% include 'delivery/includes/customer_nav.html' %}
+        </header>
+
+        <div class="table-wrap">
+        <table class="menu-table">
+            <thead>
+                <tr>
+                    <th>Restaurant Name</th>
+                    <th>Picture</th>
+                    <th>Cuisine</th>
+                    <th>Rating</th>
+                    <th>Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for r in restaurantList %}
+                    <tr>
+                        <td>{{ r.name }}</td>
+                        <td>
+                            <img src="{{ r.picture }}" alt="{{ r.name }}">
+                        </td>
+                        <td>{{ r.cuisine }}</td>
+                        <td>⭐ {{ r.rating }}</td>
+                        <td>
+                            <a href="{% url 'view_menu' r.id username %}">View Menu</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</body>
+</html>

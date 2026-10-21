@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="theme-chinese">
+    <div class="page-container page-menu">
+        <header class="menu-header">
+            <div>
+                <p class="menu-eyebrow">MealMate</p>
+                <h1 class="menu-title">Payment</h1>
+                {% if username %}
+                <p class="welcome-text">Signed in as <strong>{{ username }}</strong></p>
+                {% endif %}
+            </div>
+            {% if username %}
+            {% include 'delivery/includes/customer_nav.html' %}
+            {% endif %}
+        </header>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% if username %}
+        <p class="welcome-text"><a href="{% url 'show_cart' username %}">Return to your cart</a> or <a href="{% url 'customer_restaurants' username %}">browse restaurants</a>.</p>
+        {% endif %}
+        {% else %}
+
+        <div class="table-wrap">
+        <table class="menu-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>₹{{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <div class="total-price">
+            Total: ₹{{ total_price }}
+        </div>
+
+        <button type="button" id="rzp-button" class="btn-primary btn-cart-header" style="margin-top: 20px;">Pay with Razorpay</button>
+        {% endif %}
+    </div>
+
+    {% if not error %}
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": {{ amount_paisa }},
+            "currency": "INR",
+            "name": "Meal Buddy",
+            "description": "Order Payment",
+            "order_id": "{{ order_id }}",
+            "handler": function (response) {
+                alert("Payment Successful!");
+                window.location.href = "{% url 'orders' username %}";
+            },
+            "prefill": {
+                "name": "{{ username }}",
+                "email": "customer@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#ea580c"
+            }
+        };
+        var rzp = new Razorpay(options);
+        document.getElementById('rzp-button').onclick = function(e) {
+            rzp.open();
+            e.preventDefault();
+        };
+    </script>
+    {% endif %}
+    
+</body>
+</html>

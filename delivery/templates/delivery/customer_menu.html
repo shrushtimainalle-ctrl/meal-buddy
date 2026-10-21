@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} — Menu</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="theme-chinese">
+    <div class="page-container page-menu">
+        <header class="menu-header">
+            <div>
+                <p class="menu-eyebrow">MealMate</p>
+                <h1 class="menu-title">{{ restaurant.name }}</h1>
+                <p class="welcome-text">Welcome, <strong>{{ username }}</strong> — browse dishes and manage your cart.</p>
+            </div>
+            {% include 'delivery/includes/customer_nav.html' %}
+        </header>
+
+        <div class="table-wrap">
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Veg</th>
+                        <th>Cart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in itemList %}
+                    <tr>
+                        <td class="td-thumb">
+                            <img src="{{ item.picture }}" alt="{{ item.name }}" class="menu-item-thumb">
+                        </td>
+                        <td class="td-name">{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td class="td-price">₹{{ item.price }}</td>
+                        <td>{% if item.vegeterian %}Yes{% else %}No{% endif %}</td>
+                        <td class="td-actions">
+                            <div class="cart-actions">
+                                <a href="{% url 'add_to_cart' item.id username %}" class="btn-cart btn-cart-add">Add</a>
+                                <a href="{% url 'remove_from_cart' item.id username %}" class="btn-cart btn-cart-remove">Remove</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-menu">No items on this menu yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
